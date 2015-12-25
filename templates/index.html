@@ -56,28 +56,31 @@
 <body>
 
 <div class="container">
-    <div class="">
-        <a href="/" class="navbar-brand">{{ .site_name }}</a>
-    </div>
 
-    {{if .username }}
-    <form action="/admin/save-blog-add" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">
-        <div class="form-group">
-            <label>Content:</label>
-            <textarea name="content" class="form-control"></textarea></div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit">Save</button>
-            </div>
-        </div>
-    </form>
-    <div style="color:white">
-        Welcome {{ .username }}
-        <a href="/admin/logout">Logout</a>
-    </div>
-
-    {{end}}
     <div class="content">
+        <div class="">
+            <a href="/">{{ .site_name }}</a>
+        </div>
+
+        {{if .username }}
+
+        <div style="color:white;float:right">
+            Welcome {{ .username }}
+            <a href="/admin/logout">Logout</a>
+        </div>
+        <div style="width:92%;margin: 0px auto">
+        <form action="/admin/save-blog-add" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label>Content:</label>
+                <textarea name="content" class="form-control"></textarea></div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit">Save</button>
+                </div>
+            </div>
+        </form>
+        </div>
+        {{end}}
         <ul class="blog-list">
             {{ .bloglist }}
         </ul>
@@ -108,7 +111,6 @@
         <div class="txtcenter">Donate me Bitcoin: <code>136MYemy5QmmBPLBLr1GHZfkES7CsoG4Qh</code></div>
         <div class="clearfix h10"></div>
         <div class="txtcenter">Powered by <a href="//github.com/netroby/daylove">daylove</a>
-            <a href="/rss">RSS</a>
         </div>
     </div>
 </div>
