@@ -1,0 +1,9 @@
+db_host = "gs_db"
+db_port = 3306
+db_name = "gosense"
+db_user = "root"
+db_password = ""
+admin_user = "admin"
+admin_password = "s3curity"
+site_name = "Hard Coder"
+site_description = "Linux, opensource, golang"

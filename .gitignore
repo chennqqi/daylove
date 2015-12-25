@@ -1,0 +1,8 @@
+*.exe
+.idea/
+*.iml
+gosense
+cmd/setup/setup
+vendor/
+config.toml
+*.lock

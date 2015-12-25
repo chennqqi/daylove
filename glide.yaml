@@ -1,0 +1,16 @@
+package: github.com/netroby/gosense
+import:
+- package: github.com/fvbock/endless
+- package: github.com/gin-gonic/contrib
+  subpackages:
+  - /sessions
+- package: github.com/gin-gonic/gin
+  subpackages:
+  - binding
+- package: github.com/golang/groupcache
+  subpackages:
+  - /lru
+- package: github.com/jaytaylor/html2text
+- package: github.com/naoina/toml
+- package: github.com/netroby/feeds
+- package: github.com/netroby/mysql
