@@ -45,7 +45,7 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 		}
 		defer rows.Close()
 		var (
-			aid   int
+			aid     int
 			content sql.NullString
 		)
 		for rows.Next() {
@@ -54,7 +54,7 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 				fmt.Println(err)
 			}
 			blogList += fmt.Sprintf(
-				"<div>%s</div>",
+				"<div>%s<hr /></div>",
 				content.String,
 			)
 		}

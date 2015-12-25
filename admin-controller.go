@@ -31,7 +31,6 @@ type EditBlogItem struct {
 type AdminController struct {
 }
 
-
 func (ac *AdminController) EditBlogCtr(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("username")
