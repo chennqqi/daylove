@@ -1,7 +1,7 @@
 *.exe
 .idea/
 *.iml
-gosense
+daylove
 cmd/setup/setup
 vendor/
 config.toml
