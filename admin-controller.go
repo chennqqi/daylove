@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -11,7 +10,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -73,7 +71,6 @@ func (ac *AdminController) EditBlogCtr(c *gin.Context) {
 		"aid":              blog.aid,
 		"content":          template.HTML(blog.content.String),
 		"publish_time":     blog.publish_time.String,
-		"views":            blog.views,
 	})
 }
 
