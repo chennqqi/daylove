@@ -1,4 +1,4 @@
-package: github.com/netroby/gosense
+package: github.com/netroby/daylove
 import:
 - package: github.com/fvbock/endless
 - package: github.com/gin-gonic/contrib

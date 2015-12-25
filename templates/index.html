@@ -3,20 +3,55 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{ .site_name }} - powered by gosense!</title>
+    <title>{{ .site_name }} - powered by daylove!</title>
     <meta name="description" content="{{.site_description}}" />
-    <link href="/rss" rel="alternate" type="application/rss+xml" title="Hard Coder" />
+    <link href="/rss" rel="alternate" type="application/rss+xml" title="daylove" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/default.css">
-    <style>
-        .paginav {
-            width:100%;
-            height:24px;
-            margin:20px 40px;
-            display:block;
-            clear:both;
-        }
-    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/tinymce/4.2.7/tinymce.min.js"></script>
+    <script type="text/javascript">
+        tinymce.PluginManager.add('prettycode', function(editor, url) {
+            // Add a button that opens a window
+            editor.addButton('prettycode', {
+                text: 'PrettyCode',
+                icon: false,
+                onclick: function() {
+                    // Open window
+                    editor.windowManager.open({
+                        title: 'PrettyCode',
+                        body: [
+                            {
+                                type: 'textbox',
+                                name: 'sourcecode',
+                                multiline: true,
+                                minWidth: 600,
+                                minHeight: 500
+                            }
+                        ],
+                        onsubmit: function(e) {
+                            // Insert content when the window form is submitted
+                            editor.insertContent('<pre class="prettyprint">' + e.data.sourcecode + '</pre>');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        tinymce.init({
+            selector: "textarea",
+            theme: "modern",
+            plugins: [
+                "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                "searchreplace wordcount visualblocks visualchars fullscreen",
+                "nonbreaking save table contextmenu directionality",
+                "template paste textcolor colorpicker textpattern prettycode code"
+            ],
+            toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | prettycode link image |  forecolor backcolor ",
+            image_advtab: true,
+            extended_valid_elements : "pre[class],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name]"
+        });
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -25,18 +60,22 @@
         <div class="">
             <a href="/" class="navbar-brand">{{ .site_name }}</a>
         </div>
+        <form action="/admin/save-blog-add" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label>Content:</label>
+                <textarea name="content" class="form-control"></textarea></div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit">Save</button>
+                </div>
+            </div>
+        </form>
         <nav class="collapse navbar-collapse " role="navigation">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
-            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     {{if .username }}
                     <div style="color:white">
                         Welcome {{ .username }}
-                        <a href="/admin">Dashboard</a>
-                        <a href="/admin/addblog">Add blog</a>
                         <a href="/admin/logout">Logout</a>
                     </div>
                     {{else}}
@@ -76,7 +115,7 @@
         <div class="txtcenter">Scan QR code and Donate me via alipay:<br/><img src="/assets/images/alipayme.jpg" style="width:72px;height:72px" alt="donate me via alipay"></div>
         <div class="txtcenter">Donate me Bitcoin: <code>136MYemy5QmmBPLBLr1GHZfkES7CsoG4Qh</code></div>
         <div class="clearfix h10"></div>
-        <div class="txtcenter">Powered by <a href="//github.com/netroby/gosense">GoSense</a>
+        <div class="txtcenter">Powered by <a href="//github.com/netroby/daylove">daylove</a>
             <a href="/rss">RSS</a>
         </div>
     </div>

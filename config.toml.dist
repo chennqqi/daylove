@@ -1,6 +1,6 @@
 db_host = "gs_db"
 db_port = 3306
-db_name = "gosense"
+db_name = "daylove"
 db_user = "root"
 db_password = ""
 admin_user = "admin"

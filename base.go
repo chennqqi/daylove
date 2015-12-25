@@ -26,16 +26,11 @@ type umsg struct {
 
 type VBlogItem struct {
 	aid            int
-	title          sql.NullString
 	content        sql.NullString
 	publish_time   sql.NullString
 	publish_status sql.NullInt64
-	views          int
 }
 
-/*
-	Show message with template
-*/
 func (m *msg) ShowMessage(c *gin.Context) {
 	c.HTML(http.StatusOK, "message.html", gin.H{
 		"message": template.HTML(m.msg),
