@@ -15,6 +15,7 @@ type FrontController struct {
 }
 
 func (fc *FrontController) HomeCtr(c *gin.Context) {
+	content := c.DefaultQuery("content", "")
 	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if err != nil {
 		fmt.Println(err)
@@ -69,6 +70,7 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("username")
 	c.HTML(http.StatusOK, "index.html", gin.H{
+		"content":          content,
 		"site_name":        Config.Site_name,
 		"site_description": Config.Site_description,
 		"bloglist":         template.HTML(blogList),

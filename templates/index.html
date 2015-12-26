@@ -72,7 +72,7 @@
         <form action="/admin/save-blog-add" method="post" enctype="multipart/form-data" class="form-horizontal" role="form">
             <div class="form-group">
                 <label>Content:</label>
-                <textarea name="content" class="form-control"></textarea></div>
+                <textarea name="content" class="form-control">{{ .content }}</textarea></div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit">Save</button>
@@ -96,6 +96,7 @@
         </div>
         <div class="txtcenter">
             Links:
+            <a href="https://www.netroby.com/" target="_blank">Hard Coder</a> |
             <a href="http://www.coderbolg.com/" target="_blank">coderbolg</a> |
             <a href="http://www.hostloc.com" target="_blank">hostloc</a> |
             <a href="http://www.veryide.com/" target="_blank">VeryIDE</a> |
