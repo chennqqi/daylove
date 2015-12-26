@@ -147,9 +147,14 @@ func (ac *AdminController) SaveBlogAddCtr(c *gin.Context) {
 		(&umsg{"Content can not empty", "/"}).ShowMessage(c)
 		return
 	}
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 	_, err := DB.Exec(
 		"insert into article (content, publish_time, publish_status) values (?, ?, 1)",
-		BI.Content, time.Now().Format("2006-01-02 15:04:05"))
+		BI.Content, time.Now().In(loc).Format("2006-01-02 15:04:05"))
 	if err == nil {
 		Cache = lru.New(CacheSize)
 		(&umsg{"Success", "/"}).ShowMessage(c)
