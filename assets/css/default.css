@@ -69,4 +69,6 @@ hr {
 .content .post_time {
     margin:2px;
     float:right;
+    color:#CCC;
+    font-size:9px;
 }
