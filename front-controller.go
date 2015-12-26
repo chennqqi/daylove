@@ -40,14 +40,15 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 		fmt.Println("Ok, we found cache, Cache Len: ", Cache.Len())
 		blogList = val.(string)
 	} else {
-		rows, err := DB.Query("Select aid, content from article where publish_status = 1 order by aid desc limit ? offset ? ", &rpp, &offset)
+		rows, err := DB.Query("Select aid, content, publish_time from article where publish_status = 1 order by aid desc limit ? offset ? ", &rpp, &offset)
 		if err != nil {
 			fmt.Println(err)
 		}
 		defer rows.Close()
 		var (
-			aid     int
-			content sql.NullString
+			aid          int
+			content      sql.NullString
+			publish_time sql.NullString
 		)
 		for rows.Next() {
 			err := rows.Scan(&aid, &content)
@@ -55,8 +56,9 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 				fmt.Println(err)
 			}
 			blogList += fmt.Sprintf(
-				"<div>%s<hr /></div>",
+				"<div>%s<span class=\"post_time\">%s</span><hr /></div>",
 				content.String,
+				publish_time.String,
 			)
 		}
 		err = rows.Err()
