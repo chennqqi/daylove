@@ -59,6 +59,16 @@ Or may you want to rebuild binary and graceful reload ?
 git pull --rebase
 ./graceful-restart.sh
 ```
+## Quick add link to daylove
+
+First ,you need create bookmarklet for chrome browser.
+```
+javascript:location.href="http://127.0.0.1:8702/?content=" + encodeURIComponent('<a href="'+location.href+'">'+document.title+'</a>')
+```
+Just replace your daylove domain and port with this.
+then you open any web page you want to quick add it's link to daylove.
+Click the bookmarklet you had create before. then you will see the new open window contain the title and url linked at 
+the edit box
 
 ## License
 
