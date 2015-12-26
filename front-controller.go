@@ -51,7 +51,7 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 			publish_time sql.NullString
 		)
 		for rows.Next() {
-			err := rows.Scan(&aid, &content)
+			err := rows.Scan(&aid, &content, &publish_time)
 			if err != nil {
 				fmt.Println(err)
 			}
