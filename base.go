@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/naoina/toml"
-	_ "github.com/netroby/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"html/template"
 	"io/ioutil"
 	"net/http"

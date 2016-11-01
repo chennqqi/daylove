@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/golang/groupcache/lru"
-	_ "github.com/netroby/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"html/template"
 	"log"
 	"net/http"
