@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"github.com/fvbock/endless"
+//	"github.com/fvbock/endless"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/groupcache/lru"
@@ -41,5 +41,6 @@ func main() {
 		admin.POST("/save-blog-edit", ac.SaveBlogEditCtr)
 		admin.GET("/editblog/:id", ac.EditBlogCtr)
 	}
-	endless.ListenAndServe(":8080", r)
+	r.Run(":8080");
+	//endless.ListenAndServe(":8080", r)
 }
