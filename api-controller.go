@@ -134,13 +134,16 @@ func (ac *APIController) SaveBlogAddCtr(c *gin.Context) {
 
 
 func (ac *APIController) LoginCtr(c *gin.Context) {
-	var form APILoginForm
-	c.BindWith(&form, binding.Form)
-	fmt.Println(form.Username)
-	fmt.Println(form.Password)
+	login := struct {
+		Username	string `form:"username" json:"username" binding:"required"`
+		Password 	string `form:"password" json:"password" binding:"required"`
+	}{}
+	c.BindJSON(&login)
+	fmt.Println(login.Username)
+	fmt.Println(login.Password)
 	fmt.Println(Config.Admin_user)
 	fmt.Println(Config.Admin_password)
-	if form.Username == Config.Admin_user && form.Password == Config.Admin_password {
+	if login.Username == Config.Admin_user && login.Password == Config.Admin_password {
 		ac.Token = Sha512RandomString()
 		c.JSON(http.StatusOK, gin.H{"msg":"login success", "token":ac.Token})
 	} else {
