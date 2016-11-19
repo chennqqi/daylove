@@ -139,10 +139,6 @@ func (ac *APIController) LoginCtr(c *gin.Context) {
 		Password 	string `form:"password" json:"password" binding:"required"`
 	}{}
 	c.BindJSON(&login)
-	fmt.Println(login.Username)
-	fmt.Println(login.Password)
-	fmt.Println(Config.Admin_user)
-	fmt.Println(Config.Admin_password)
 	if login.Username == Config.Admin_user && login.Password == Config.Admin_password {
 		ac.Token = Sha512RandomString()
 		c.JSON(http.StatusOK, gin.H{"msg":"login success", "token":ac.Token})
