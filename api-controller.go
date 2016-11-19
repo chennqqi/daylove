@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"crypto/sha512"
 	"encoding/hex"
-	"math/rand"
 )
 
 type BlogItemFull struct {
