@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"crypto/sha512"
 	"encoding/hex"
+	"math/rand"
 )
 
 type BlogItemFull struct {
@@ -30,7 +31,11 @@ type APIController struct {
 }
 
 func Sha512RandomString() (string) {
-	s := string(time.Now().UnixNano())
+	s, err := strconv.ParseInt(time.Now().UnixNano(), 10, 64)
+	if err != nil {
+		fmt.Println("Convert int64 to string error")
+		return ""
+	}
 	h := sha512.New()
 	h.Write([]byte(s))
 	hash := hex.EncodeToString(h.Sum(nil))
