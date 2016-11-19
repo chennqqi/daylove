@@ -37,6 +37,11 @@ func Sha512RandomString() (string) {
 	return hash
 }
 func (ac *APIController) ListCtr(c *gin.Context) {
+	token := c.DefaultQuery("token", "")
+	if token == "" || token != ac.Token {
+		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
+		return
+	}
 	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if err != nil {
 		fmt.Println(err)
@@ -80,7 +85,8 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 }
 
 func (ac *APIController) SaveBlogEditCtr(c *gin.Context) {
-	if ac.Token == "" {
+	token := c.DefaultQuery("token", "")
+	if token == "" || token != ac.Token {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
@@ -104,7 +110,8 @@ func (ac *APIController) SaveBlogEditCtr(c *gin.Context) {
 
 }
 func (ac *APIController) SaveBlogAddCtr(c *gin.Context) {
-	if ac.Token == "" {
+	token := c.DefaultQuery("token", "")
+	if token == "" || token != ac.Token {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
@@ -149,7 +156,8 @@ func (ac *APIController) LoginCtr(c *gin.Context) {
 }
 
 func (ac *APIController) LogoutCtr(c *gin.Context) {
-	if ac.Token == "" {
+	token := c.DefaultQuery("token", "")
+	if token == "" || token != ac.Token {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
