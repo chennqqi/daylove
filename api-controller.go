@@ -31,11 +31,7 @@ type APIController struct {
 }
 
 func Sha512RandomString() (string) {
-	s, err := strconv.ParseInt(time.Now().UnixNano(), 10, 64)
-	if err != nil {
-		fmt.Println("Convert int64 to string error")
-		return ""
-	}
+	s := strconv.FormatInt(time.Now().UnixNano(), 10)
 	h := sha512.New()
 	h.Write([]byte(s))
 	hash := hex.EncodeToString(h.Sum(nil))
