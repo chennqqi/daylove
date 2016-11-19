@@ -45,15 +45,11 @@ func main() {
 	apiCtrl := new(APIController)
 	api := r.Group("/api")
 	{
-		api.GET("/login", apiCtrl.LoginCtr)
-		api.GET("/login", apiCtrl.LoginCtr)
-		api.POST("/login-process", apiCtrl.LoginProcessCtr)
-		api.GET("/logout", apiCtrl.LogoutCtr)
-		api.GET("/addblog", apiCtrl.AddBlogCtr)
+		api.POST("/list", apiCtrl.ListCtr)
+		api.POST("/login", apiCtrl.LoginCtr)
+		api.POST("/logout", apiCtrl.LogoutCtr)
 		api.POST("/save-blog-add", apiCtrl.SaveBlogAddCtr)
-		api.GET("/deleteblog/:id", apiCtrl.DeleteBlogCtr)
 		api.POST("/save-blog-edit", apiCtrl.SaveBlogEditCtr)
-		api.GET("/editblog/:id", apiCtrl.EditBlogCtr)
 	}
 	r.Run(":8080");
 	//endless.ListenAndServe(":8080", r)
