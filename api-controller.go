@@ -24,21 +24,13 @@ type APILoginForm struct {
 	Password string `form:"password" binding:"required"`
 }
 
-// BlogItem is the blog item
-type BlogItem struct {
-	Content string `form:"content" binding:"required"`
-}
-type EditBlogItem struct {
-	Aid     string `form:"aid" binding:"required"`
-	Content string `form:"content" binding:"required"`
-}
 
 type APIController struct {
 	Token string
 }
 
 func Sha512RandomString() (string) {
-	s := time.Nanosecond()
+	s := string(time.Now().Nanosecond())
 	h := sha512.New()
 	h.Write([]byte(s))
 	hash := hex.EncodeToString(h.Sum(nil))
@@ -61,7 +53,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 	val, ok := Cache.Get(CKey)
 	if val != nil && ok == true {
 		fmt.Println("Ok, we found cache, Cache Len: ", Cache.Len())
-		blogList = val.(string)
+		blogList = val.([]BlogItemFull)
 	} else {
 		rows, err := DB.Query("Select aid, content, publish_time from article where publish_status = 1 order by aid desc limit ? offset ? ", &rpp, &offset)
 		if err != nil {
@@ -80,7 +72,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		go func(CKey string, blogList string) {
+		go func(CKey string, blogList []BlogItemFull) {
 			Cache.Add(CKey, blogList)
 		}(CKey, blogList)
 	}
@@ -88,7 +80,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 }
 
 func (ac *APIController) SaveBlogEditCtr(c *gin.Context) {
-	if ac.Token == nil {
+	if ac.Token == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
@@ -112,7 +104,7 @@ func (ac *APIController) SaveBlogEditCtr(c *gin.Context) {
 
 }
 func (ac *APIController) SaveBlogAddCtr(c *gin.Context) {
-	if ac.Token == nil {
+	if ac.Token == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
@@ -148,16 +140,16 @@ func (ac *APIController) LoginCtr(c *gin.Context) {
 		ac.Token = Sha512RandomString()
 		c.JSON(http.StatusOK, gin.H{"msg":"login success", "token":ac.Token})
 	} else {
-		ac.Token = nil
+		ac.Token = ""
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg":"Login failed"})
 	}
 }
 
 func (ac *APIController) LogoutCtr(c *gin.Context) {
-	if ac.Token == nil {
+	if ac.Token == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
-	ac.Token = nil
+	ac.Token = ""
 	c.JSON(http.StatusOK, gin.H{"msg":"logout success"})
 }
