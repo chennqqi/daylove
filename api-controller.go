@@ -30,7 +30,7 @@ type APIController struct {
 }
 
 func Sha512RandomString() (string) {
-	s := string(time.Now().Nanosecond())
+	s := string(time.Now().UnixNano())
 	h := sha512.New()
 	h.Write([]byte(s))
 	hash := hex.EncodeToString(h.Sum(nil))
