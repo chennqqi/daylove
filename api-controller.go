@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/golang/groupcache/lru"
 	_ "github.com/go-sql-driver/mysql"
 	"net/http"
@@ -91,7 +90,7 @@ func (ac *APIController) SaveBlogEditCtr(c *gin.Context) {
 		return
 	}
 	var BI EditBlogItem
-	c.BindWith(&BI, binding.Form)
+	c.BindJSON(&BI)
 	if BI.Aid == "" {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg":"can not find the blog to edit"})
 		return
@@ -116,7 +115,7 @@ func (ac *APIController) SaveBlogAddCtr(c *gin.Context) {
 		return
 	}
 	var BI BlogItem
-	c.BindWith(&BI, binding.Form)
+	c.BindJSON(&BI)
 	if BI.Content == "" {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg":"Content can not empty"})
 		return

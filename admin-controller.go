@@ -15,17 +15,17 @@ import (
 
 // AdminLoginForm is the login form for Admin
 type AdminLoginForm struct {
-	Username string `form:"username" binding:"required"`
-	Password string `form:"password" binding:"required"`
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
 }
 
 // BlogItem is the blog item
 type BlogItem struct {
-	Content string `form:"content" binding:"required"`
+	Content string `form:"content" json:"content" binding:"required"`
 }
 type EditBlogItem struct {
-	Aid     string `form:"aid" binding:"required"`
-	Content string `form:"content" binding:"required"`
+	Aid     string `form:"aid" json:"aid" binding:"required"`
+	Content string `form:"content" json:"content" binding:"required"`
 }
 
 type AdminController struct {
