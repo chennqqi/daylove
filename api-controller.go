@@ -80,7 +80,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 			Cache.Add(CKey, blogList)
 		}(CKey, blogList)
 	}
-	c.JSON(http.StatusOK, blogList)
+	c.JSON(http.StatusOK, gin.H{"data": blogList})
 }
 
 func (ac *APIController) SaveBlogEditCtr(c *gin.Context) {
