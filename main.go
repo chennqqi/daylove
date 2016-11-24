@@ -48,6 +48,7 @@ func main() {
 		api.POST("/list", apiCtrl.ListCtr)
 		api.POST("/login", apiCtrl.LoginCtr)
 		api.POST("/logout", apiCtrl.LogoutCtr)
+		api.POST("/file-upload", apiCtrl.FileUpload)
 		api.POST("/save-blog-add", apiCtrl.SaveBlogAddCtr)
 		api.POST("/save-blog-edit", apiCtrl.SaveBlogEditCtr)
 	}

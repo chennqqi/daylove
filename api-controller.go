@@ -92,7 +92,6 @@ func (ac *APIController) FileUpload(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"url": Config.ObjectStorage.Cdn_url + storageTargetPath})
-	(&umsg{"Upload success", "/admin/files"}).ShowMessage(c)
 }
 func (ac *APIController) ListCtr(c *gin.Context) {
 	token := c.DefaultQuery("token", "")
@@ -195,8 +194,8 @@ func (ac *APIController) SaveBlogAddCtr(c *gin.Context) {
 		return
 	}
 	_, err = DB.Exec(
-		"insert into article (content, publish_time, publish_status) values (?, ?, 1)",
-		BI.Content, time.Now().In(loc).Format("2006-01-02 15:04:05"))
+		"insert into article (content, images, publish_time, publish_status) values (?, ?, 1)",
+		BI.Content, BI.Images, time.Now().In(loc).Format("2006-01-02 15:04:05"))
 	if err == nil {
 		Cache = lru.New(CacheSize)
 		c.JSON(http.StatusOK, gin.H{"msg": "success"})

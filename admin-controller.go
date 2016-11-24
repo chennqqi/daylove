@@ -22,6 +22,7 @@ type AdminLoginForm struct {
 // BlogItem is the blog item
 type BlogItem struct {
 	Content string `form:"content" json:"content" binding:"required"`
+	Images string `form:"images" json:"images" `
 }
 type EditBlogItem struct {
 	Aid     string `form:"aid" json:"aid" binding:"required"`
