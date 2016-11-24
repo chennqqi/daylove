@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"encoding/json"
 )
 
 type FrontController struct {
@@ -46,7 +47,7 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 		fmt.Println("Ok, we found cache, Cache Len: ", Cache.Len())
 		blogList = val.(string)
 	} else {
-		rows, err := DB.Query("Select aid, content, publish_time from article where publish_status = 1 order by aid desc limit ? offset ? ", &rpp, &offset)
+		rows, err := DB.Query("Select aid, content, images, publish_time from article where publish_status = 1 order by aid desc limit ? offset ? ", &rpp, &offset)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -54,16 +55,29 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 		var (
 			aid          int
 			content      sql.NullString
+			images	     sql.NullString
+			imagesList   []string
 			publish_time sql.NullString
 		)
 		for rows.Next() {
-			err := rows.Scan(&aid, &content, &publish_time)
+			err := rows.Scan(&aid, &content, &images, &publish_time)
 			if err != nil {
 				fmt.Println(err)
 			}
+			imagesHtml := ""
+			err = json.Unmarshal([]byte(images.String), &imagesList)
+			if err != nil {
+				fmt.Println(err)
+				continue;
+			} else {
+				for i := range imagesList {
+					imagesHtml += "<img src=\"" + imagesList[i] + "?act=resize&x=640\" />"
+				}
+			}
 			blogList += fmt.Sprintf(
-				"<div>%s<span class=\"post_time\">%s</span><hr /></div>",
+				"<div>%s <br />%s<span class=\"post_time\">%s</span><hr /></div>",
 				content.String,
+				imagesHtml,
 				publish_time.String,
 			)
 		}
