@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/naoina/toml"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/naoina/toml"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -70,6 +70,13 @@ type appConfig struct {
 	Admin_password   string
 	Site_name        string
 	Site_description string
+	ObjectStorage    struct {
+		Aws_access_key_id     string
+		Aws_secret_access_key string
+		Aws_region            string
+		Aws_bucket            string
+		Cdn_url               string
+	}
 }
 
 func GetConfig() *appConfig {
