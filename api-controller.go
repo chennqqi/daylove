@@ -77,7 +77,9 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 			err = json.Unmarshal([]byte(Images), &blog.Images)
 			if err != nil {
 				fmt.Println(err)
-				blog.Images = make([]string, 1)
+			}
+			if blog.Images == nil {
+				blog.Images = make([]string, 0)
 			}
 			blogList = append(blogList, blog)
 		}
