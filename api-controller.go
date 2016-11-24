@@ -10,11 +10,13 @@ import (
 	"strconv"
 	"crypto/sha512"
 	"encoding/hex"
+	"encoding/json"
 )
 
 type BlogItemFull struct {
 	Aid string
 	Content string
+	Images []string
 	PublishTime string
 }
 // APILoginForm is the login form for Admin
@@ -59,16 +61,23 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 		fmt.Println("Ok, we found cache, Cache Len: ", Cache.Len())
 		blogList = val.([]BlogItemFull)
 	} else {
-		rows, err := DB.Query("Select aid, content, publish_time from article where publish_status = 1 order by aid desc limit ? offset ? ", &rpp, &offset)
+		rows, err := DB.Query("Select aid, content, images, publish_time from article where publish_status = 1 order by aid desc limit ? offset ? ", &rpp, &offset)
 		if err != nil {
 			fmt.Println(err)
 		}
 		defer rows.Close()
+		var Images string
 		for rows.Next() {
 			blog := BlogItemFull{}
-			err := rows.Scan(&blog.Aid, &blog.Content, &blog.PublishTime)
+
+			err := rows.Scan(&blog.Aid, &blog.Content, &Images, &blog.PublishTime)
 			if err != nil {
 				fmt.Println(err)
+			}
+			err = json.Unmarshal([]byte(Images), &blog.Images)
+			if err != nil {
+				fmt.Println(err)
+				blog.Images = make([]string, 1)
 			}
 			blogList = append(blogList, blog)
 		}
