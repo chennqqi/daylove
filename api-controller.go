@@ -183,6 +183,7 @@ func (ac *APIController) SaveBlogAddCtr(c *gin.Context) {
 	}
 	var BI BlogItem
 	c.BindJSON(&BI)
+	fmt.Println(BI)
 	if BI.Content == "" {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg": "Content can not empty"})
 		return
@@ -194,12 +195,13 @@ func (ac *APIController) SaveBlogAddCtr(c *gin.Context) {
 		return
 	}
 	_, err = DB.Exec(
-		"insert into article (content, images, publish_time, publish_status) values (?, ?, 1)",
+		"insert into article (content, images, publish_time, publish_status) values (?, ?, ?, 1)",
 		BI.Content, BI.Images, time.Now().In(loc).Format("2006-01-02 15:04:05"))
 	if err == nil {
 		Cache = lru.New(CacheSize)
 		c.JSON(http.StatusOK, gin.H{"msg": "success"})
 	} else {
+		fmt.Println(err)
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg": "Save failed"})
 	}
 
