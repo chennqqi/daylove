@@ -130,22 +130,44 @@ func (ac *APIController) FileUpload(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"url": Config.ObjectStorage.Cdn_url + storageTargetPath})
 }
+type ListQueryParams struct {
+	Page string `json:"page"`
+	Rpp string  `json:"rpp"`
+}
 func (ac *APIController) ListCtr(c *gin.Context) {
 	token := c.DefaultQuery("token", "")
 	if token == "" || ac.getToken(token) == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
-	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
-	if err != nil {
-		fmt.Println(err)
+	fmt.Print(c.Request.ContentLength)
+	page := 1
+	rpp := 20
+	if (c.Request.ContentLength > 0) {
+		var queryParams ListQueryParams
+		err := c.BindJSON(&queryParams)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"msg": "request params error"})
+			return
+		}
+		page, err = strconv.Atoi(queryParams.Page)
+		if err != nil {
+			page = 1
+		}
+		rpp, err = strconv.Atoi(queryParams.Rpp)
+		if err != nil {
+			rpp = 20
+		}
 	}
 	page -= 1
 	if page < 0 {
 		page = 0
 	}
 
-	rpp := 20
+	if (rpp < 1) {
+		rpp = 20
+	}
 	offset := page * rpp
 	CKey := fmt.Sprintf("%s-api-home-page-%d-rpp-%d", GetMinutes(), page, rpp)
 	var blogList []BlogItemFull
@@ -185,6 +207,10 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 		go func(CKey string, blogList []BlogItemFull) {
 			Cache.Add(CKey, blogList)
 		}(CKey, blogList)
+	}
+	if blogList == nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg":"Not more "})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": blogList})
 }
