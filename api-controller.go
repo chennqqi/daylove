@@ -110,7 +110,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 
 	rpp := 20
 	offset := page * rpp
-	CKey := fmt.Sprintf("%s-home-page-%d-rpp-%d", GetMinutes(), page, rpp)
+	CKey := fmt.Sprintf("%s-api-home-page-%d-rpp-%d", GetMinutes(), page, rpp)
 	var blogList []BlogItemFull
 	val, ok := Cache.Get(CKey)
 	if val != nil && ok == true {
