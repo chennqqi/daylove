@@ -72,7 +72,9 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 					continue;
 				} else {
 					for i := range imagesList {
-						imagesHtml += "<img src=\"" + imagesList[i] + "?act=resize&x=640\" />"
+						if len(imagesList[i]) > 0 {
+							imagesHtml += "<img src=\"" + imagesList[i] + "?act=resize&x=640\" />"
+						}
 					}
 				}
 			}
