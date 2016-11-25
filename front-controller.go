@@ -65,13 +65,15 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 				fmt.Println(err)
 			}
 			imagesHtml := ""
-			err = json.Unmarshal([]byte(images.String), &imagesList)
-			if err != nil {
-				fmt.Println(err)
-				continue;
-			} else {
-				for i := range imagesList {
-					imagesHtml += "<img src=\"" + imagesList[i] + "?act=resize&x=640\" />"
+			if images.Valid {
+				err = json.Unmarshal([]byte(images.String), &imagesList)
+				if err != nil {
+					fmt.Println(err)
+					continue;
+				} else {
+					for i := range imagesList {
+						imagesHtml += "<img src=\"" + imagesList[i] + "?act=resize&x=640\" />"
+					}
 				}
 			}
 			blogList += fmt.Sprintf(

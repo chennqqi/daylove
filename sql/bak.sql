@@ -10,3 +10,9 @@ CREATE TABLE `article` (
   FULLTEXT KEY `content` (`content`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE access_token
+(
+  Token VARCHAR(256) PRIMARY KEY NOT NULL,
+  CreateAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+CREATE UNIQUE INDEX access_token_Token_uindex ON access_token (Token);

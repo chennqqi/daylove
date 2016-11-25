@@ -18,6 +18,7 @@ import (
 	"strconv"
 	"time"
 	"path/filepath"
+	"database/sql"
 )
 
 type BlogItemFull struct {
@@ -48,9 +49,45 @@ func Sha512RandomString() string {
 func genNewFileName(n string) string {
 	return Sha512RandomString() + filepath.Ext(n)
 }
+
+func (ac *APIController) getToken(t string) (string) {
+	rows, err := DB.Query("Select Token from access_token where Token =  ? ", &t)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer rows.Close()
+	var dToken string
+	if rows.Next() {
+		err = rows.Scan(&dToken)
+		if err != nil {
+			fmt.Println(err)
+			return ""
+		}
+	} else {
+		return ""
+	}
+	return dToken
+}
+func (ac *APIController) setToken(t string) (bool) {
+	_, err := DB.Exec("replace into access_token set Token=?", &t)
+	if err != nil {
+		fmt.Println(err)
+		return false;
+	}
+	return true
+}
+func (ac *APIController) clearToken(t string) (bool) {
+	_, err := DB.Exec("delete from access_token where Token=?", &t)
+	if err != nil {
+		fmt.Println(err)
+		return false;
+	}
+	return true
+}
+
 func (ac *APIController) FileUpload(c *gin.Context) {
 	token := c.DefaultQuery("token", "")
-	if token == "" || token != ac.Token {
+	if token == "" || ac.getToken(token) == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
@@ -95,7 +132,7 @@ func (ac *APIController) FileUpload(c *gin.Context) {
 }
 func (ac *APIController) ListCtr(c *gin.Context) {
 	token := c.DefaultQuery("token", "")
-	if token == "" || token != ac.Token {
+	if token == "" || ac.getToken(token) == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
@@ -122,7 +159,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 			fmt.Println(err)
 		}
 		defer rows.Close()
-		var Images string
+		var Images sql.NullString
 		for rows.Next() {
 			blog := BlogItemFull{}
 
@@ -130,9 +167,11 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 			if err != nil {
 				fmt.Println(err)
 			}
-			err = json.Unmarshal([]byte(Images), &blog.Images)
-			if err != nil {
-				fmt.Println(err)
+			if Images.Valid {
+				err = json.Unmarshal([]byte(Images.String), &blog.Images)
+				if err != nil {
+					fmt.Println(err)
+				}
 			}
 			if blog.Images == nil {
 				blog.Images = make([]string, 0)
@@ -152,7 +191,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 
 func (ac *APIController) SaveBlogEditCtr(c *gin.Context) {
 	token := c.DefaultQuery("token", "")
-	if token == "" || token != ac.Token {
+	if token == "" || ac.getToken(token) == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
@@ -177,7 +216,7 @@ func (ac *APIController) SaveBlogEditCtr(c *gin.Context) {
 }
 func (ac *APIController) SaveBlogAddCtr(c *gin.Context) {
 	token := c.DefaultQuery("token", "")
-	if token == "" || token != ac.Token {
+	if token == "" || ac.getToken(token) == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
@@ -214,20 +253,20 @@ func (ac *APIController) LoginCtr(c *gin.Context) {
 	}{}
 	c.BindJSON(&login)
 	if login.Username == Config.Admin_user && login.Password == Config.Admin_password {
-		ac.Token = Sha512RandomString()
-		c.JSON(http.StatusOK, gin.H{"msg": "login success", "token": ac.Token})
+		token := Sha512RandomString()
+		ac.setToken(token)
+		c.JSON(http.StatusOK, gin.H{"msg": "login success", "token": token})
 	} else {
-		ac.Token = ""
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg": "Login failed"})
 	}
 }
 
 func (ac *APIController) LogoutCtr(c *gin.Context) {
 	token := c.DefaultQuery("token", "")
-	if token == "" || token != ac.Token {
+	if token == "" || ac.getToken(token) == "" {
 		c.JSON(http.StatusForbidden, gin.H{"msg": "token not valid"})
 		return
 	}
-	ac.Token = ""
+	ac.clearToken(token)
 	c.JSON(http.StatusOK, gin.H{"msg": "logout success"})
 }
