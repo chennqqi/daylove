@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang/groupcache/lru"
-	"html/template"
-	"log"
-	"net/http"
-	"time"
 )
 
 // AdminLoginForm is the login form for Admin
@@ -22,7 +23,7 @@ type AdminLoginForm struct {
 // BlogItem is the blog item
 type BlogItem struct {
 	Content string `form:"content" json:"content" binding:"required"`
-	Images string `form:"images" json:"images" `
+	Images  string `form:"images" json:"images" `
 }
 type EditBlogItem struct {
 	Aid     string `form:"aid" json:"aid" binding:"required"`
@@ -154,7 +155,7 @@ func (ac *AdminController) SaveBlogAddCtr(c *gin.Context) {
 		return
 	}
 	_, err = DB.Exec(
-		"insert into article (content, publish_time, publish_status) values (?, ?, 1)",
+		"insert into article (content, images, publish_time, publish_status) values (?, '[]', ?, 1)",
 		BI.Content, time.Now().In(loc).Format("2006-01-02 15:04:05"))
 	if err == nil {
 		Cache = lru.New(CacheSize)
