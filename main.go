@@ -45,6 +45,7 @@ func main() {
 	apiCtrl := new(APIController)
 	api := r.Group("/api")
 	{
+		api.HEAD("/", apiCtrl.HomeCtr)
 		api.POST("/list", apiCtrl.ListCtr)
 		api.POST("/login", apiCtrl.LoginCtr)
 		api.POST("/logout", apiCtrl.LogoutCtr)

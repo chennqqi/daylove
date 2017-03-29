@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"crypto/sha512"
+	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -15,10 +16,9 @@ import (
 	"github.com/golang/groupcache/lru"
 	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"time"
-	"path/filepath"
-	"database/sql"
 )
 
 type BlogItemFull struct {
@@ -50,7 +50,7 @@ func genNewFileName(n string) string {
 	return Sha512RandomString() + filepath.Ext(n)
 }
 
-func (ac *APIController) getToken(t string) (string) {
+func (ac *APIController) getToken(t string) string {
 	rows, err := DB.Query("Select Token from access_token where Token =  ? ", &t)
 	if err != nil {
 		fmt.Println(err)
@@ -68,19 +68,23 @@ func (ac *APIController) getToken(t string) (string) {
 	}
 	return dToken
 }
-func (ac *APIController) setToken(t string) (bool) {
+func (ac *APIController) HomeCtr(c *gin.Context) {
+	c.String(http.StatusOK, "ok")
+}
+
+func (ac *APIController) setToken(t string) bool {
 	_, err := DB.Exec("replace into access_token set Token=?", &t)
 	if err != nil {
 		fmt.Println(err)
-		return false;
+		return false
 	}
 	return true
 }
-func (ac *APIController) clearToken(t string) (bool) {
+func (ac *APIController) clearToken(t string) bool {
 	_, err := DB.Exec("delete from access_token where Token=?", &t)
 	if err != nil {
 		fmt.Println(err)
-		return false;
+		return false
 	}
 	return true
 }
@@ -104,13 +108,13 @@ func (ac *APIController) FileUpload(c *gin.Context) {
 	file, fileHeader, err := c.Request.FormFile("uploadfile")
 	if err != nil {
 		fmt.Println(err)
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg":"uploading error"})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg": "uploading error"})
 		return
 	}
 	loc, err := time.LoadLocation("Asia/Shanghai")
 	if err != nil {
 		fmt.Println(err)
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg":"uploading error"})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg": "uploading error"})
 		return
 	}
 	prefix := time.Now().In(loc).Format("2006/01/02")
@@ -125,15 +129,17 @@ func (ac *APIController) FileUpload(c *gin.Context) {
 	_, err = s3o.PutObject(params)
 	if err != nil {
 		fmt.Println(err)
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg":"Can not upload file"})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg": "Can not upload file"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"url": Config.ObjectStorage.Cdn_url + storageTargetPath})
 }
+
 type ListQueryParams struct {
 	Page string `json:"page"`
-	Rpp string  `json:"rpp"`
+	Rpp  string `json:"rpp"`
 }
+
 func (ac *APIController) ListCtr(c *gin.Context) {
 	token := c.DefaultQuery("token", "")
 	if token == "" || ac.getToken(token) == "" {
@@ -143,7 +149,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 	fmt.Print(c.Request.ContentLength)
 	page := 1
 	rpp := 20
-	if (c.Request.ContentLength > 0) {
+	if c.Request.ContentLength > 0 {
 		var queryParams ListQueryParams
 		err := c.BindJSON(&queryParams)
 		if err != nil {
@@ -165,7 +171,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 		page = 0
 	}
 
-	if (rpp < 1) {
+	if rpp < 1 {
 		rpp = 20
 	}
 	offset := page * rpp
@@ -209,7 +215,7 @@ func (ac *APIController) ListCtr(c *gin.Context) {
 		}(CKey, blogList)
 	}
 	if blogList == nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg":"Not more "})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"msg": "Not more "})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": blogList})

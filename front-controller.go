@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,6 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"encoding/json"
 )
 
 type FrontController struct {
@@ -55,7 +55,7 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 		var (
 			aid          int
 			content      sql.NullString
-			images	     sql.NullString
+			images       sql.NullString
 			imagesList   []string
 			publish_time sql.NullString
 		)
@@ -69,7 +69,7 @@ func (fc *FrontController) HomeCtr(c *gin.Context) {
 				err = json.Unmarshal([]byte(images.String), &imagesList)
 				if err != nil {
 					fmt.Println(err)
-					continue;
+					continue
 				} else {
 					for i := range imagesList {
 						if len(imagesList[i]) > 0 {
