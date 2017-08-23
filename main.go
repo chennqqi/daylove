@@ -22,10 +22,10 @@ func main() {
 	Cache = lru.New(CacheSize)
 
 	r := gin.Default()
-	r.Static("/assets", "assets")
+	r.Static("/assets", "./vol/assets")
 	store := sessions.NewCookieStore([]byte("gssecret"))
 	r.Use(sessions.Sessions("mysession", store))
-	r.LoadHTMLGlob("templates/*.html")
+	r.LoadHTMLGlob("./vol/templates/*.html")
 
 	fc := new(FrontController)
 	r.GET("/", fc.HomeCtr)

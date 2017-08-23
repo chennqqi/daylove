@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: daylove
+  labels:
+    app: daylove
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: daylove
+    tier: frontend  
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: daylove
+  labels:
+    app: daylove
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: daylove
+        tier: frontend
+    spec:
+      containers:
+      - image: daylove
+        imagePullPolicy: IfNotPresent
+        name: daylove        
+        ports:
+        - containerPort: 8080
+          name: daylove
+        volumeMounts:
+        - mountPath: /data
+          name: data-vol
+        - mountPath: /www/vol
+          name: data-vol
+          subPath: www/daylove/vol
+      volumes:
+      - name: data-vol
+        hostPath:
+          path: /data
+      restartPolicy: Always
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
