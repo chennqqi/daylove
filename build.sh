@@ -1,2 +1,3 @@
 #!/bin/bash
-docker build  . -t gosense
+set -ex
+docker build  . -t daylove
