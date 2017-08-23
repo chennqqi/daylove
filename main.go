@@ -53,6 +53,6 @@ func main() {
 		api.POST("/save-blog-add", apiCtrl.SaveBlogAddCtr)
 		api.POST("/save-blog-edit", apiCtrl.SaveBlogEditCtr)
 	}
-	r.Run(":8080")
+	r.Run(":8081")
 	//endless.ListenAndServe(":8080", r)
 }
