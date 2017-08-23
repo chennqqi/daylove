@@ -80,7 +80,7 @@ type appConfig struct {
 }
 
 func GetConfig() *appConfig {
-	f, err := os.Open("config.toml")
+	f, err := os.Open("./vol/config.toml")
 	if err != nil {
 		panic(err)
 	}
