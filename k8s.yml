@@ -6,7 +6,7 @@ metadata:
     app: daylove
 spec:
   ports:
-    - port: 8080
+    - port: 8081
   selector:
     app: daylove
     tier: frontend  
@@ -31,7 +31,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: daylove        
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
           name: daylove
         volumeMounts:
         - mountPath: /data
