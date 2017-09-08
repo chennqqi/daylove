@@ -3,6 +3,5 @@
 *.iml
 daylove
 cmd/setup/setup
-vendor/
 config.toml
 *.lock
